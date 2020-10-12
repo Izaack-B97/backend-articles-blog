@@ -11,6 +11,7 @@ const app = express();
 app.set('port', process.env.PORT || 3000) ;
 
 // Cargar Ficheros
+const articleRoutes = require('./routes/article');
 
 // Middlewars
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,20 +19,8 @@ app.use(bodyParser.json())
 
 // CORS
 
-// Añadir prefijos a la rutas
-
-// Ruta o metodo de prueba para el API REST
-app.get('/', (req, res) => {
-    res.send('Bienvenido a mi  API REST');
-});
-
-app.get('/probando', (req, res) => {
-    res.json({
-        curso: 'Master en frameworksjs',
-        autor: 'Victor Robles', 
-        url: 'victorrobleweb.es'
-    });
-});
+// Añadir prefijos a la rutas/ Cargar rutas
+app.use('/api', articleRoutes);
 
 // Exportar moduo (fichero actual)
 module.exports = app;
