@@ -24,7 +24,7 @@ const controller = {
 
     save: (req, res) => {
         const params = req.body;
-
+        console.log(params)
         try {
             var validator_title = !validator.isEmpty(params.title);
             var validator_content = !validator.isEmpty(params.content);
@@ -65,8 +65,14 @@ const controller = {
     },
 
     getArticles: (req, res) => {
-        
-        Article.find({}).sort('-_id').exec((err, articles) => {
+        let query = Article.find();        
+        let last = req.params.last;
+
+        if (last || last != undefined ) {
+            query.limit(5);
+        }
+
+        query.sort('-_id').exec((err, articles) => {
             if(err) {
                 res.status(500).json({
                     status: 'error',
