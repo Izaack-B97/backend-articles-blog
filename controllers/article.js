@@ -92,6 +92,33 @@ const controller = {
                 articles
             });
         });
+    },
+
+    getArticle : (req, res) => {
+        let id = req.params.id;
+        
+        if(!id || id == null) {
+            res.status(404).json({
+                status: 'error',
+                message: 'No existe el articulo'
+            });
+        }        
+        
+        Article.findById(id, (err, article) => {
+
+            if (!article || err) {
+                res.status(404).json({
+                    status: 'error',
+                    message: ' No existe el articulo'
+                });
+            } else {
+                res.status(202).json({
+                    status: 'success',
+                    article
+                });
+    
+            }
+        });
     }
 };
 
