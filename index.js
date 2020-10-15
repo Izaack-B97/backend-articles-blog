@@ -14,8 +14,7 @@ mongose.connect('mongodb://localhost:27017/api_rest_blog', { useNewUrlParser: tr
 
         app.listen(app.get('port'), () => {
             console.log('Server on port ' + app.get('port'))
-        })
-
+        });
     })
     .catch(err => {
         console.log(chalk.red('ERROR AL CONECTAR LA BD: ' + err));

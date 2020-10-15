@@ -133,19 +133,6 @@ const controller = {
         }
 
         if (validate_title && validate_content) {
-            // Article.updateOne({_id: params.id}, { title, content })
-            //     .then(result => {
-            //         res.status(200).json({
-            //             status: 'success',
-            //             result
-            //         });
-            //     })
-            //     .catch(err => {
-            //         res.status(404).json({
-            //             status: 'error',
-            //             message: err
-            //         });
-            //     });
                                                                     //devuelve ! el objeto actualizado
             Article.findOneAndUpdate({id: params.id }, params, {new: true},
                 (err, articleUpdate) => {
@@ -155,6 +142,7 @@ const controller = {
                             message: 'Error al actualizar'
                         });
                     }
+
                     if (!articleUpdate) {
                         res.status(404).json({
                             status: 'error',
@@ -174,6 +162,31 @@ const controller = {
                 message: 'La validacion no es correcta !'
             });
         }
+    },
+
+    delete: (req, res) => {
+        let id = req.params.id;
+
+        Article.findOneAndDelete({_id: id }, (err, articleRemove) => {
+            if(err) {
+                res.status(500).json({
+                    status: 'error',
+                    message: 'Error al borrar'
+                });
+            }
+            
+            if (!articleRemove) {
+                res.status(404).json({
+                    status: 'error',
+                    message: 'No se pudo borrar el articulo, posiblemente no exista'
+                });
+            }
+
+            res.status(200).json({
+                status: 'success',
+                articleRemove
+            });
+        });
     }
 };
 
