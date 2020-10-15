@@ -2,6 +2,8 @@
 
 const validator = require('validator');
 const Article = require('../models/article');  
+const fs = require('fs');
+const path =  require('path');
 
 const controller = {
     datosCurso: (req, res) => {
@@ -56,6 +58,16 @@ const controller = {
             });
 
         } else {
+            // Elimina un fichero
+            fs.unlink(file_path, (err) => {
+                if(err) {
+                    res.status(200).json({
+                        status: 'error',
+                        message: 'La extension de la imagen no es valida'
+                    });
+                }
+            });
+
             res.status(200).json({
                 status: 'error',
                 message: 'Los datos son incorrectos'
@@ -205,6 +217,15 @@ const controller = {
         let file_ext = file_name.split('.')[1];
 
         if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif') {
+            let id  = req.params.id; 
+            
+            // Buscamos el archivo y le actualizamos el nombre de la imagen
+            Article.findOneAndUpdate({_id: id}, { image: 'Imagen actualizada' }, { new: true }, (err, articleUpdated) => {
+                
+                // TODO: Terminar la funcionalidad de actualizar la imagen
+            
+            });
+            
             res.status(200).json({
                 status: 'success',
                 fichero: file,
@@ -212,6 +233,14 @@ const controller = {
             });
         } else {
             // Eliminanos el archivo que se guardo
+            fs.unlink(file_path, (err) => {
+                if(err) {
+                    res.status(500).json({
+                        status: 'error',
+                        message: 'Error al borrar la imagen, la extension no es valida'
+                    });        
+                }
+            });  
 
             res.status(404).json({
                 status: 'error',
