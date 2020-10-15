@@ -187,6 +187,37 @@ const controller = {
                 articleRemove
             });
         });
+    },
+    
+    upload: (req, res) => {
+        let file_name = 'No se ha subido el archivo';
+        let file =  req.files;
+
+        if(!file) {
+            res.status(404).json({
+                status: 'error',
+                message: 'No se ha cargado una imagen'
+            });
+        }
+
+        let file_path = file.image.path;
+        file_name = file_path.split('\\')[2];
+        let file_ext = file_name.split('.')[1];
+
+        if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif') {
+            res.status(200).json({
+                status: 'success',
+                fichero: file,
+                file_ext
+            });
+        } else {
+            // Eliminanos el archivo que se guardo
+
+            res.status(404).json({
+                status: 'error',
+                message: 'El archivo no es una imagen'
+            });
+        }
     }
 };
 
