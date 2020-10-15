@@ -8,7 +8,7 @@ const app = require('./app.js');
 mongose.Promise = global.Promise;
 mongose.set('useFindAndModify', false);
 
-mongose.connect('mongodb://localhost:27017/api_rest_blog', { useNewUrlParser: true })
+mongose.connect('mongodb://localhost:27017/api_rest_blog', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(resp => {
         console.log(chalk.green('CONECTADO A LA BASE DE DATOS'));
 

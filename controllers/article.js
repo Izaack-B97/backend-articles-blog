@@ -1,8 +1,7 @@
 'use strict'
 
 const validator = require('validator');
-const Article = require('../models/article');
-const { param } = require('../routes/article');
+const Article = require('../models/article');  
 
 const controller = {
     datosCurso: (req, res) => {
@@ -115,10 +114,66 @@ const controller = {
                 res.status(202).json({
                     status: 'success',
                     article
-                });
-    
+                });    
             }
         });
+    },
+    
+    update: (req, res) => {
+        let params = req.body;
+        let title = params.title, content = params.content;
+        try {
+            var validate_title = !validator.isEmpty(params.title);
+            var validate_content = !validator.isEmpty(params.content);
+        } catch (err) {
+            res.status(200).json({
+                status: 'error',
+                message: 'Faltan datos por enviar !'
+            });
+        }
+
+        if (validate_title && validate_content) {
+            // Article.updateOne({_id: params.id}, { title, content })
+            //     .then(result => {
+            //         res.status(200).json({
+            //             status: 'success',
+            //             result
+            //         });
+            //     })
+            //     .catch(err => {
+            //         res.status(404).json({
+            //             status: 'error',
+            //             message: err
+            //         });
+            //     });
+                                                                    //devuelve ! el objeto actualizado
+            Article.findOneAndUpdate({id: params.id }, params, {new: true},
+                (err, articleUpdate) => {
+                    if(err) {
+                        res.status(500).json({
+                            status: 'error',
+                            message: 'Error al actualizar'
+                        });
+                    }
+                    if (!articleUpdate) {
+                        res.status(404).json({
+                            status: 'error',
+                            message: 'Articulo no encontrado',
+                            articleUpdate
+                        });
+                    } 
+                        
+                    res.status(200).json({
+                        status: 'success',
+                        articleUpdate
+                    });
+                });
+        } else {
+            res.status(200).json({
+                status: 'error',
+                message: 'La validacion no es correcta !'
+            });
+        }
     }
 };
 
