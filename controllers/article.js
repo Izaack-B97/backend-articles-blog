@@ -205,6 +205,8 @@ const controller = {
         let file_name = 'No se ha subido el archivo';
         let file =  req.files;
 
+        console.log(file)
+
         if(!file) {
             res.status(404).json({
                 status: 'error',
@@ -219,18 +221,24 @@ const controller = {
         if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif') {
             let id  = req.params.id; 
             
-            // Buscamos el archivo y le actualizamos el nombre de la imagen
-            Article.findOneAndUpdate({_id: id}, { image: 'Imagen actualizada' }, { new: true }, (err, articleUpdated) => {
-                
-                // TODO: Terminar la funcionalidad de actualizar la imagen
+            //Buscamos el archivo y le actualizamos el nombre de la imagen
+            Article.findOneAndUpdate({_id: id}, { image: file_name }, { new: true }, (err, articleUpdate) => {
+                // TODO: Reparar que no actualiza
+
+                if (err || !articleUpdate) {
+                    res.status(404).json({
+                        status: 'error',
+                        message: 'Error al actualizar, probablemente el articulo no exista'
+                    });
+                } else {
+                    res.status(200).json({
+                        status: 'success',
+                        articleUpdate
+                    });
+                }
             
             });
             
-            res.status(200).json({
-                status: 'success',
-                fichero: file,
-                file_ext
-            });
         } else {
             // Eliminanos el archivo que se guardo
             fs.unlink(file_path, (err) => {
