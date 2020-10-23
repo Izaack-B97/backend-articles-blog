@@ -226,6 +226,17 @@ const controller = {
                 // TODO: Reparar que no actualiza
 
                 if (err || !articleUpdate) {
+
+                    // Eliminanos el archivo que se guardo
+                    fs.unlink(file_path, (err) => {
+                        if(err) {
+                            res.status(500).json({
+                                status: 'error',
+                                message: 'Error al borrar la imagen, la extension no es valida'
+                            });        
+                        }
+                    });  
+
                     res.status(404).json({
                         status: 'error',
                         message: 'Error al actualizar, probablemente el articulo no exista'
@@ -253,6 +264,22 @@ const controller = {
             res.status(404).json({
                 status: 'error',
                 message: 'El archivo no es una imagen'
+            });
+        }
+    },
+
+    getImage: (req, res) => {
+
+        let file = req.params.image;
+        let file_path = path.resolve(`./upload/articles/${file}`);
+        let existe = fs.existsSync(file_path);
+        
+        if (existe) {
+            res.status(200).sendFile(file_path);
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'La imagen no existe'
             });
         }
     }

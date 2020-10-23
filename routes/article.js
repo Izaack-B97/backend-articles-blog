@@ -23,5 +23,6 @@ router.route('/article/:id')
     .delete(ArticleController.delete);
 
 router.post('/image-upload/:id', md_upload,ArticleController.upload);
+router.get('/get-image/:image', ArticleController.getImage);
 
 module.exports = router;
