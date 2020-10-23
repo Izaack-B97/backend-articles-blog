@@ -282,6 +282,45 @@ const controller = {
                 message: 'La imagen no existe'
             });
         }
+    },
+
+    search: (req, res) => {
+        let searchString = req.params.search;
+
+        Article
+            .find({
+                // Clausula or
+                "$or": [
+                    // condiciones a buscar, -> "$options": "i" quiere decir
+                    // que incluya la cadena a buscar dentro de los textos de
+                    // los campos a buscar
+                    { "title": { "$regex": searchString, "$options": "i" }},
+                    { "content": { "$regex": searchString, "$options": "i" }}
+                ]
+            })
+            .sort([['date', 'descending']]) // Ordenamos de manera descendente la fecha
+            .exec((err, articles) => {
+
+                if(err) {
+                    res.status(500).json({
+                        status: 'error',
+                        message: 'Error en la peticion'
+                    });
+                }
+
+                if(!articles || articles.length === 0) {
+                    res.status(404).json({
+                        status: 'error',
+                        message: 'No hay articulos que coincidan con la busqueda !'
+                    });
+                }
+
+                res.status(200).json({
+                    status: 'success',
+                    articles
+                });
+
+            });
     }
 };
 

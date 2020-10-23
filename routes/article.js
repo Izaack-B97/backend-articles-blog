@@ -24,5 +24,6 @@ router.route('/article/:id')
 
 router.post('/image-upload/:id', md_upload,ArticleController.upload);
 router.get('/get-image/:image', ArticleController.getImage);
+router.get('/search/:search', ArticleController.search);
 
 module.exports = router;
